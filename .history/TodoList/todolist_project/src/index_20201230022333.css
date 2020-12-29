@@ -1,6 +1,5 @@
 
-  
-
+@font-face { font-family: 'CookieRun Bold'; src: url(./fonts/CookieRunBold.ttf) format('truetype'); }
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
