@@ -1,70 +1,140 @@
-# Getting Started with Create React App
+## TodoList 미니 프로젝트
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
+<br>
 
-## Available Scripts
+### 목차
+1. [TodoList구상도]
+2. [TodoList 컴포넌트](#todolist-제작-컴포넌트)
+    1. [Todo Template 생성](#todo-template-생성)
+3. [TodoList 기능 구현]
+---
+### TodoList 구상도
 
-In the project directory, you can run:
+<br>
 
-### `npm start`
+**블로그 및 노션 확인**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<br>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+---
+<br>
 
-### `npm test`
+### TodoList 제작 컴포넌트
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Todo Template : Todo List의 레이아웃을 설정하는 컴포넌트 페이지 중앙에 배경 박스
+- Todo Head:  Template 안에 상단 오른쪽에 날짜와 시간 요일 남은 할 일 표시
+    - TodoTitle : TodoList 제목
+    - Todo date : 오늘 날짜와 요일 및 남은 할일 개수 표시
+    - TodoCreate : 새로운 일을 등록하는 컴포넌트
+- Todo List : 할 일에 대한 정보 template 중앙 위치
+    - TodoItem : Todo List에 보여지는 할 일을 하나씩 세세하게 표현
 
-### `npm run build`
+---
+<br>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### App.js 배경 설정
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- styled-components를 글로벌 스타일로 추가하여 생성
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    ```jsx
+    import { createGlobalStyle } from 'styled-components';
+    ```
 
-### `npm run eject`
+- App.js
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+    ```jsx
+    import React from 'react';
+    import { createGlobalStyle } from 'styled-components';
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    const GlobalStyle = createGlobalStyle`
+      body {
+        background: #e9ecef;
+      }
+    `;
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+    function App() {
+      return (
+        <>
+          <GlobalStyle />
+          <div>TodoList 만들기 </div>
+        </>
+      );
+    }
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+    export default App;
+    ```
 
-## Learn More
+---
+<br>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Todo Template 생성
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+- 중앙에 흰색 배경의 박스 생성
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
+<br>
 
-### Analyzing the Bundle Size
+- **TodoTemplate.js**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+    ```jsx
+    import React from 'react';
+    import styled from 'styled-components';
 
-### Making a Progressive Web App
+    const TodoTemplateBlock = styled.div`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+        width: 512px;
+        height: 768px;
+        margin: 0 auto;
+        margin-top: 200px;
+        margin-top: 96px;
+        margin-bottom: 32px;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        border-radius: 16px;
+        box-shadow: 5px 5px 5px 5px  #787878;
 
-### Advanced Configuration
+    `;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+    function TodoTemplate({children}){
+        return(
+            <TodoTemplateBlock>
+                {children}
+            </TodoTemplateBlock>
+        );
+    }
 
-### Deployment
+    export default TodoTemplate;
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- **App.js**
 
-### `npm run build` fails to minify
+    ```jsx
+    import React from 'react';
+    import {createGlobalStyle} from 'styled-components';
+    import TodoTemplate from './components/TodoTemplate';
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    const GlobalStyle = createGlobalStyle`
+        body {
+          background: #FDF5E6;
+        }
+    `;
+
+    function App(){
+      return(
+        <>
+        <GlobalStyle/>
+        <TodoTemplate>
+        <div>TodoList 시작 </div>
+        </TodoTemplate>
+        
+        </>
+      );
+    }
+
+    export default App;
+    ```
+
+---
