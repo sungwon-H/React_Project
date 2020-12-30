@@ -8,6 +8,7 @@
 2. [TodoList 컴포넌트](#todolist-제작-컴포넌트)
     1. [Todo Template 생성](#todo-template-생성)
     2. [Todo Head생성](#todo-head-생성)
+    3. [Todo List생성](#todo-list-생성)
 3. [TodoList 기능 구현]
 ---
 ### TodoList 구상도
@@ -812,5 +813,331 @@
 
             - 버튼 클릭시 onToggle 상수 발생 open 실행
 
+
+---
+<br>
+
+### Todo List 생성
+
+- 이 컴포넌트 에서는 생성된 할 일 리스트를 보여주고 리스트의 각 아이템 마다 체크, 중요표시, 제거 등 디자인을 구현한다.
+- TodoList: 생성된 리스트 정렬
+- TodoItem : 리스트안에 담겨 있는 아이템
+
+---
+
+- **TodoList.js**
+
+    ```jsx
+    import React from 'react';
+    import styled from 'styled-components';
+    import TodoItem from './TodoItem';
+    const TodoListBlock= styled.div`
+        border: 1px solid black;
+        flex: 1; // 해당 태그가 차지할 수 있는 영역을 꽉 채우도록 설정
+        padding: 20px 32px;
+        padding-bottom: 48px;
+        overflow-y: auto;
+       
+    `;
+
+    function TodoList(){
+        return(
+            <TodoListBlock>
+                 <TodoItem text="두두등장" done={true} />
+                 <TodoItem text="내일까지 마무리" done={true} />
+                 <TodoItem text="얼른 해야함" done={true} />
+                 <TodoItem text="고고고고고고고고" done={true} />
+            </TodoListBlock>
+        );
+    }
+
+    export default TodoList;
+    ```
+
+    - 리액트 선언 및 스타일 컴포넌트 라이브러리, 컴포넌트 연결
+
+        ```jsx
+        import React from 'react';
+        import styled from 'styled-components';
+        import TodoItem from './TodoItem';
+        ```
+
+    - TodoListBlock 디자인
+
+        ```jsx
+        const TodoListBlock= styled.div`
+            border: 1px solid black;
+            flex: 1; // 해당 태그가 차지할 수 있는 영역을 꽉 채우도록 설정
+            padding: 20px 32px;
+            padding-bottom: 48px;
+            overflow-y: auto; // 내용이 넘칠때 어떻게 보일지
+        `;
+        ```
+
+    - 렌더 화면
+
+        ```jsx
+        function TodoList(){
+            return(
+                <TodoListBlock>
+                     <TodoItem text="두두등장" done={true} />
+                     <TodoItem text="내일까지 마무리" done={true} />
+                     <TodoItem text="얼른 해야함" done={true} />
+                     <TodoItem text="고고고고고고고고" done={true} />
+                </TodoListBlock>
+            );
+        }
+
+        export default TodoList;
+        ```
+
+        - TodoListBlcok 안에 TodoItem 컴포넌트 적용
+
+---
+
+- **TodoItem.js**
+
+    ```jsx
+    import React from 'react';
+    import styled,{css} from 'styled-components';
+    import { MdDone, MdDelete, MdStar } from 'react-icons/md';
+
+    // 삭제
+    const Remove = styled.div`
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #dee2e6;
+        font-size: 24px;
+        cursor: pointer;
+        &:hover {
+        color: #ff6b6b;
+        }
+        display:none;
+    `;
+
+    // 중요표시
+    const Import = styled.div`
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #dee2e6;
+        font-size: 24px;
+        cursor: pointer;
+        margin-right: 10px; 
+        &:hover {
+        color: #f0f351;
+        }
+        display:none;
+        
+        
+    `;
+
+    // 아이템 블록
+    const TodoItemBlock = styled.div`
+      border:1px solid black;
+      display: flex;
+      align-items: center;
+      padding-top: 12px;
+      padding-bottom: 12px;
+      &:hover {
+        ${Remove} {
+          display: initial;
+        }
+        ${Import} {
+            display: initial;
+          }
+      }
+
+    `;
+    //체크버튼 
+    const CheckCircle = styled.div`
+      width: 32px;
+      height: 32px;
+      border-radius: 16px;
+      border: 1px solid #ced4da;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20px;
+      cursor: pointer;
+
+      ${props =>
+        props.done &&
+        css`
+          border: 1px solid #38d9a9;
+          color: #38d9a9;
+        `}
+    `;
+
+    const Text = styled.div`
+      flex: 1;
+      font-size: 21px;
+      color: #495057;
+      ${props =>
+        props.done &&
+        css`
+          color: #ced4da;
+          text-decoration: line-through;
+        `}
+    `;
+
+    function TodoItem({id, done, text}){
+        return(
+            <TodoItemBlock>
+                <CheckCircle done={done}>{done && <MdDone/>}</CheckCircle>
+                <Text done={done}>{text}</Text>
+                <Import>
+                    <MdStar/>
+                </Import>
+                <Remove>
+                    <MdDelete/>
+                </Remove>
+            </TodoItemBlock>
+        )
+    }
+
+    export default TodoItem;
+    ```
+
+    - 리액트 사용 및 스타일 컴포넌트, 리액트 아이콘 모듈 사용
+
+        ```jsx
+        import React from 'react';
+        import styled,{css} from 'styled-components';
+        import { MdDone, MdDelete, MdStar } from 'react-icons/md';
+        ```
+
+    - 삭제 버튼 스타일 컴포넌트 디자인
+
+        ```jsx
+        // 삭제
+        const Remove = styled.div`
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dee2e6; // 기본색상
+            font-size: 24px;
+            cursor: pointer;
+            &:hover {
+            color: #ff6b6b; // 마우스 커서가 가리킬때 색상변화
+            }
+            display:none; // 
+        `;
+        ```
+
+    - 중요표시 버튼
+
+        ```jsx
+        // 중요표시
+        const Import = styled.div`
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dee2e6;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 10px; 
+            &:hover {
+            color: #f0f351;
+            }
+            display:none;
+            
+            
+        `;
+        ```
+
+    - 아이템 블록
+
+        ```jsx
+        const TodoItemBlock = styled.div`
+          border:1px solid black;
+          display: flex;
+          align-items: center;
+          padding-top: 12px;
+          padding-bottom: 12px;
+          &:hover {
+            ${Remove} {
+              display: initial; // 아이템에 마우스 커서가 가리키면 다시 보여줌 
+            }
+            ${Import} {
+                display: initial;
+              }
+          }
+
+        `;
+        ```
+
+    - 체크버튼
+
+        ```jsx
+        //체크버튼 
+        const CheckCircle = styled.div`
+          width: 32px;
+          height: 32px;
+          border-radius: 16px;
+          border: 1px solid #ced4da;
+          font-size: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 20px;
+          cursor: pointer;
+
+          ${props =>
+            props.done &&
+            css`
+              border: 1px solid #38d9a9;
+              color: #38d9a9;
+            `}
+        `;
+
+        ```
+
+        - props를 사용하여 체크 시 색상변경
+
+    - 텍스트 문구 작성
+
+        ```jsx
+
+        const Text = styled.div`
+          flex: 1;
+          font-size: 21px;
+          color: #495057;
+          ${props =>
+            props.done &&
+            css`
+              color: #ced4da;
+              text-decoration: line-through;
+            `}
+        `;
+        ```
+
+        - props를 사용함 텍스트를 클릭하면 텍스트 가운데 줄
+
+    - 렌더 및 전역 선언
+
+        ```jsx
+        function TodoItem({id, done, text}){
+            return(
+                <TodoItemBlock>
+                    <CheckCircle done={done}>{done && <MdDone/>}</CheckCircle>
+                    <Text done={done}>{text}</Text>
+                    <Import>
+                        <MdStar/>
+                    </Import>
+                    <Remove>
+                        <MdDelete/>
+                    </Remove>
+                </TodoItemBlock>
+            )
+        }
+
+        export default TodoItem;
+        ```
+
+        - CheckCircle: 클릭 시 색 변화 설정
+        - Text: done 설정으로 클릭 시 변화 줌
 
 ---
