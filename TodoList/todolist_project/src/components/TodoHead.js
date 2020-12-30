@@ -1,21 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
+import TodoDate from './TodoDate';
 import TodoTitle from './TodoTitle';
-const TodoHeadBlock = styled.div`
-    height:200px;
-    padding-top:10px;
-    padding-left: 32px;
-    padding-right: 32px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid #e9ecef;
-    border: 1px solid black;
-`;
+import TodoTask from './TodoTask';
+import TodoCreate from './TodoCreate';
 
+const TodoHeadBlock = styled.div`
+    
+    height:280px;
+    padding-top:10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #c8c8c8;
+`;
 
 function TodoHead() {
     return(
         <TodoHeadBlock>
+            <TodoDate/>
             <TodoTitle/>
+            <TodoTask/>
+            <TodoCreate/>
         </TodoHeadBlock>
     );
 }

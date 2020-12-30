@@ -7,7 +7,6 @@ const TodoTemplateBlock = styled.div`
     height: 768px;
     margin: 0 auto;
     margin-top: 200px;
-    margin-top: 96px;
     margin-bottom: 32px;
     background: white;
     display: flex;

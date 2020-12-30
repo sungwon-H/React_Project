@@ -7,6 +7,7 @@
 1. [TodoList구상도]
 2. [TodoList 컴포넌트](#todolist-제작-컴포넌트)
     1. [Todo Template 생성](#todo-template-생성)
+    2. [Todo Head생성](#todo-head-생성)
 3. [TodoList 기능 구현]
 ---
 ### TodoList 구상도
@@ -24,8 +25,9 @@
 
 - Todo Template : Todo List의 레이아웃을 설정하는 컴포넌트 페이지 중앙에 배경 박스
 - Todo Head:  Template 안에 상단 오른쪽에 날짜와 시간 요일 남은 할 일 표시
+    - Todo date : 오늘 날짜
     - TodoTitle : TodoList 제목
-    - Todo date : 오늘 날짜와 요일 및 남은 할일 개수 표시
+    - Todo Task : 중요한 일 및 남은 일
     - TodoCreate : 새로운 일을 등록하는 컴포넌트
 - Todo List : 할 일에 대한 정보 template 중앙 위치
     - TodoItem : Todo List에 보여지는 할 일을 하나씩 세세하게 표현
@@ -79,34 +81,33 @@
 - **TodoTemplate.js**
 
     ```jsx
-    import React from 'react';
-    import styled from 'styled-components';
+  import React from 'react';
+  import styled from 'styled-components';
 
-    const TodoTemplateBlock = styled.div`
+  const TodoTemplateBlock = styled.div`
 
-        width: 512px;
-        height: 768px;
-        margin: 0 auto;
-        margin-top: 200px;
-        margin-top: 96px;
-        margin-bottom: 32px;
-        background: white;
-        display: flex;
-        flex-direction: column;
-        border-radius: 16px;
-        box-shadow: 5px 5px 5px 5px  #787878;
+      width: 512px;
+      height: 768px;
+      margin: 0 auto;
+      margin-top: 200px;
+      margin-bottom: 32px;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      border-radius: 16px;
+      box-shadow: 5px 5px 5px 5px  #787878;
 
-    `;
+  `;
 
-    function TodoTemplate({children}){
-        return(
-            <TodoTemplateBlock>
-                {children}
-            </TodoTemplateBlock>
-        );
-    }
+  function TodoTemplate({children}){
+      return(
+          <TodoTemplateBlock>
+              {children}
+          </TodoTemplateBlock>
+      )
+  }
 
-    export default TodoTemplate;
+  export default TodoTemplate;
     ```
 
 - **App.js**
@@ -136,5 +137,680 @@
 
     export default App;
     ```
+
+---
+<br>
+
+### Todo Head 생성
+
+- 이 컴포넌트에서 제목,시간, 요일, 남은 할 일 개수, 할일생성를 표현한다.
+- TodoDate: 현재 날짜
+- TodoTitle : 제목
+- TodoTasksleft&important:
+    - TodoImportant: 중요한 일 갯수
+    - TodoTaskleft: 남은 할일
+- TodoCreate: 할일 생성
+
+---
+
+
+
+- **TodoHead.js**
+
+    ```jsx
+    import React from 'react';
+    import styled from 'styled-components';
+    import TodoDate from './TodoDate';
+    import TodoTitle from './TodoTitle';
+    import TodoTask from './TodoTask';
+    import TodoCreate from './TodoCreate';
+
+    const TodoHeadBlock = styled.div`
+        
+        height:280px;
+        padding-top:10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #c8c8c8;
+    `;
+
+    function TodoHead() {
+        return(
+            <TodoHeadBlock>
+                <TodoDate/>
+                <TodoTitle/>
+                <TodoTask/>
+                <TodoCreate/>
+            </TodoHeadBlock>
+        );
+    }
+
+    export default TodoHead;
+    ```
+
+    - 각 컴포넌트 불러오기
+
+        ```jsx
+        import React from 'react';
+        import styled from 'styled-components';
+        import TodoDate from './TodoDate';
+        import TodoTitle from './TodoTitle';
+        import TodoTask from './TodoTask';
+        import TodoCreate from './TodoCreate';
+        ```
+
+    - TodoHeadBlock 스타일 컴포넌트 사용
+
+        ```jsx
+        const TodoHeadBlock = styled.div`
+            
+            height:280px;
+            padding-top:10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #c8c8c8;
+        `;
+        ```
+
+    - 컴포넌트 렌더 및 전역선언
+
+        ```jsx
+        function TodoHead() {
+            return(
+                <TodoHeadBlock>
+                    <TodoDate/>
+                    <TodoTitle/>
+                    <TodoTask/>
+                    <TodoCreate/>
+                </TodoHeadBlock>
+            );
+        }
+
+        export default TodoHead;
+        ```
+
+    ---
+
+    - **TodoDate.js**
+
+        ```jsx
+        import React from 'react';
+        import "./TodoDate.scss";
+
+        function TodoDate(){
+            return(
+                
+                    <div className="TodoDate">0000년 00월 00일</div>
+               
+                
+            )
+        }
+
+        export default TodoDate;
+        ```
+
+        - 리액트 선언 및 scss 연결
+
+            ```jsx
+            import React from 'react';
+            import "./TodoDate.scss";
+
+            ```
+
+        - 렌더링 및 전역선언
+
+            ```jsx
+            function TodoDate(){
+                return(
+                    
+                        <div className="TodoDate">0000년 00월 00일</div>
+                   
+                    
+                )
+            }
+
+            export default TodoDate;
+            ```
+
+    - **TodoDate.scss**
+
+        ```jsx
+        @import url('https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,700;1,400;1,700&display=swap');
+
+        .TodoDate{
+               width: 150px;
+               height: 25px;
+               margin-bottom: 10px;
+               
+               font-family: 'Philosopher', sans-serif;
+        }
+        ```
+
+        - 글꼴은 @import 로 사용
+
+    ---
+
+    - **TodoTitle.js**
+
+        ```jsx
+        import React from 'react';
+        import "./TodoTitle.scss";
+
+        function TodoTitle(){
+            return(
+                
+                    <div className="TodoTitle">TO DO LIST</div>
+                
+            )
+        }
+
+        export default TodoTitle;
+        ```
+
+        - 리액트 선언 및 scss 연결
+
+            ```jsx
+            import React from 'react';
+            import "./TodoTitle.scss";
+            ```
+
+        - 렌더 및 전역선언
+
+            ```jsx
+            function TodoTitle(){
+                return(
+                    
+                        <div className="TodoTitle">TO DO LIST</div>
+                    
+                )
+            }
+
+            export default TodoTitle;
+            ```
+
+    - **TodoTitle.scss**
+
+        ```jsx
+        @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+        .TodoTitle{
+               
+                text-align: center;
+                font-family: 'Anton', sans-serif;
+                font-size: 40px;
+                
+                color:#99e9f2;
+                margin-bottom: 19px;
+        }
+        ```
+
+    ---
+
+    - **TodoTask.js**
+
+        ```jsx
+        import React from 'react';
+        import styled from 'styled-components';
+        import {MdStar} from 'react-icons/md';
+
+        const TodoTaskBlock = styled.div`
+        display:flex;
+        justify-content: space-between;
+
+        .tasks-important{
+            font-size: 21px;
+            font-weight:bold;
+            color: #323232; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+        }
+
+        .tasks-left{
+            font-size: 21px;
+            font-weight:bold;
+            color: #F49F5B;
+            
+        }
+        `
+        function TodoTask(){
+            return(
+                <TodoTaskBlock>
+                    <div className="tasks-important">
+                    <MdStar font-size="25px" color= "#f0f351"/> 0
+                        </div>
+                    <div className="tasks-left">남은 할 일 x 개</div>
+                </TodoTaskBlock>
+            )
+        }
+        export default TodoTask;
+        ```
+
+        - 리액트 선언 및 스타일 컴포넌트, 아이콘 모듈 사용
+
+            ```jsx
+            import React from 'react';
+            import styled from 'styled-components';
+            import {MdStar} from 'react-icons/md';
+            ```
+
+        - 스타일 컴포넌트
+
+            ```jsx
+            const TodoTaskBlock = styled.div`
+            display:flex;
+            justify-content: space-between;
+
+            .tasks-important{
+                font-size: 21px;
+                font-weight:bold;
+                color: #323232; 
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                
+            }
+
+            .tasks-left{
+                font-size: 21px;
+                font-weight:bold;
+                color: #F49F5B;
+                
+            }
+            `
+            ```
+
+            - .tasks-important: 중요한 일 표시
+            - .tasks-left: 남은 할 일 표시
+
+        - 랜더 및 전역함수
+
+            ```jsx
+
+            function TodoTask(){
+                return(
+                    <TodoTaskBlock>
+                        <div className="tasks-important">
+                        <MdStar font-size="25px" color= "#f0f351"/> 0
+                            </div>
+                        <div className="tasks-left">남은 할 일 x 개</div>
+                    </TodoTaskBlock>
+                )
+            }
+            export default TodoTask;
+            ```
+
+            - TodoTaskBlock 테두리
+            - Mdstar는 이모티콘
+
+    ---
+
+- **TodoCreate.js**
+
+    ```jsx
+    import React, {useState} from 'react';
+    import styled, {css} from 'styled-components';
+    import {MdAdd} from 'react-icons/md';
+
+    const CircleButton = styled.button`
+      
+        background: #F49551;
+        &:hover { 
+        background: #F5AF64;
+        transform: rotate(45deg);
+        }
+        &:active {
+        background: #F49551;
+        }
+
+       z-index:5;
+        width: 40px; // 너비
+        height: 40px; // 높이
+        font-size: 60px; //  +두께
+        color:white;
+        border-radius: 50%; // 둥글게
+        position: relative; // 아이콘 위치 변경
+        top: 20%; // 아이콘 아래로
+        left : 90%; // 아이콘 왼쪽으로 90
+        border: none; // 테두리x
+        outline: none; // 테두리 x
+
+        // 아이콘 + 위치
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.125s all ease-in; // 모양변화속도
+
+        ${props =>
+            props.open &&
+            css`
+              background: #288CFF;
+              &:hover {
+                background: #50C8FF;
+                transform: rotate(45deg);
+              }
+              &:active {
+                background: #288CFF;
+              }
+              
+              border-radius: 10%; // 둥글게
+
+            `}
+    `;
+    const InsertFormPositioner = styled.div` // 입력 폼 1번째 
+        display:flex;
+        width: 383px;
+        top:395px;
+        position: absolute;
+    `;
+
+    const InsertForm = styled.form` // 입력폼 2번째
+       
+        
+        background: #f8f9fa;
+        padding-right:10px;
+        padding-left:10px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        border-radius: 5%;
+
+    `;
+    const Input = styled.input` // 3번째 입력폼
+
+      padding-top:10px;
+      padding-bottom:10px;
+      border-radius: 4px;
+      border: 1px solid #dee2e6;
+      width: 383px;
+      outline: none;
+      font-size: 18px;
+      box-sizing: border-box;
+    `;
+
+    function TodoCreate(){
+        const [open, setOpen] = useState(false); 
+
+        const onToggle = () => setOpen(!open);
+        return(
+        <>
+        {open &&(
+            <InsertFormPositioner>
+                <InsertForm>
+                <Input autoFocus placeholder="할 일을 입력 후, Enter 를 누르세요" />
+                </InsertForm>
+            </InsertFormPositioner>
+        )}
+        
+        <CircleButton onClick={onToggle} open={open}>
+            <MdAdd/>
+          </CircleButton>
+        </>
+
+    );
+    }
+
+    export default TodoCreate;
+    ```
+
+    - 리액트 사용 및 모듈 사용
+
+        ```jsx
+        import React, {useState} from 'react';
+        import styled, {css} from 'styled-components';
+        import {MdAdd} from 'react-icons/md';
+        ```
+
+    - 버튼 스타일 컴포넌트
+
+        ```jsx
+        const CircleButton = styled.button`
+          
+            background: #F49551;
+            &:hover { 
+            background: #F5AF64;
+            transform: rotate(45deg);
+            }
+            &:active {
+            background: #F49551;
+            }
+
+           z-index:5;
+            width: 40px; // 너비
+            height: 40px; // 높이
+            font-size: 60px; //  +두께
+            color:white;
+            border-radius: 50%; // 둥글게
+            position: relative; // 아이콘 위치 변경
+            top: 20%; // 아이콘 아래로
+            left : 90%; // 아이콘 왼쪽으로 90
+            border: none; // 테두리x
+            outline: none; // 테두리 x
+
+            // 아이콘 + 위치
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.125s all ease-in; // 모양변화속도
+
+            ${props =>
+                props.open &&
+                css`
+                  background: #288CFF;
+                  &:hover {
+                    background: #50C8FF;
+                    transform: rotate(45deg);
+                  }
+                  &:active {
+                    background: #288CFF;
+                  }
+                  
+                  border-radius: 10%; // 둥글게
+
+                `}
+        `;
+        ```
+
+        - 버튼 배경색 및 마우스 갖다 대거나 클릭한 경우 색상 효과
+
+            ```jsx
+             background: #F49551;
+                &:hover { 
+                background: #F5AF64;
+                transform: rotate(45deg); // 회전 효과
+                }
+                &:active {
+                background: #F49551;
+                }
+
+            ```
+
+        - 버튼 디자인
+
+            ```jsx
+             z-index:5;
+                width: 40px; // 너비
+                height: 40px; // 높이
+                font-size: 60px; //  +두께
+                color:white;
+                border-radius: 50%; // 둥글게
+                position: relative; // 아이콘 위치 변경
+                top: 20%; // 아이콘 아래로
+                left : 90%; // 아이콘 왼쪽으로 90
+                border: none; // 테두리x
+                outline: none; // 테두리 x
+            ```
+
+        - 버튼에 + 위치 조정
+
+            ```jsx
+             // 아이콘 + 위치
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: 0.125s all ease-in; // 모양변화속도
+
+            ```
+
+        - props로 open이 발동된 경우의 css
+
+            ```jsx
+             ${props =>
+                    props.open &&
+                    css`
+                      background: #288CFF;
+                      &:hover {
+                        background: #50C8FF;
+                        transform: rotate(45deg);
+                      }
+                      &:active {
+                        background: #288CFF;
+                      }
+                      
+                      border-radius: 10%; // 둥글게
+
+                    `}
+            ```
+
+    - 입력 창 스타일 컴포넌트
+
+        ```jsx
+        const InsertFormPositioner = styled.div` // 입력 폼 1번째 
+            display:flex;
+            width: 383px;
+            top:395px;
+            position: absolute;
+        `;
+
+        const InsertForm = styled.form` // 입력폼 2번째
+           
+            
+            background: #f8f9fa;
+            padding-right:10px;
+            padding-left:10px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            border-radius: 5%;
+
+        `;
+        const Input = styled.input` // 3번째 입력폼
+
+          padding-top:10px;
+          padding-bottom:10px;
+          border-radius: 4px;
+          border: 1px solid #dee2e6;
+          width: 383px;
+          outline: none;
+          font-size: 18px;
+          box-sizing: border-box;
+        `;
+
+        ```
+
+        - 1번 테두리 설정
+
+            ```jsx
+            const InsertFormPositioner = styled.div` // 입력 폼 1번째 
+                display:flex;
+                width: 383px;
+                top:395px;
+                position: absolute;
+            `;
+            ```
+
+        - 2번 테두리 설정
+
+            ```jsx
+            const InsertForm = styled.form` // 입력폼 2번째
+               
+                
+                background: #f8f9fa;
+                padding-right:10px;
+                padding-left:10px;
+                padding-top: 12px;
+                padding-bottom: 12px;
+                border-radius: 5%;
+
+            `;
+            ```
+
+        - 3번 테두리 (실제 입력 란)
+
+            ```jsx
+            const Input = styled.input` // 3번째 입력폼
+
+              padding-top:10px;
+              padding-bottom:10px;
+              border-radius: 4px;
+              border: 1px solid #dee2e6;
+              width: 383px;
+              outline: none;
+              font-size: 18px;
+              box-sizing: border-box;
+            `;
+
+            ```
+
+    - 렌더 함수
+
+        ```jsx
+        function TodoCreate(){
+            const [open, setOpen] = useState(false); 
+
+            const onToggle = () => setOpen(!open);
+            return(
+            <>
+            {open &&(
+                <InsertFormPositioner>
+                    <InsertForm>
+                    <Input autoFocus placeholder="할 일을 입력 후, Enter 를 누르세요" />
+                    </InsertForm>
+                </InsertFormPositioner>
+            )}
+            
+            <CircleButton onClick={onToggle} open={open}>
+                <MdAdd/>
+              </CircleButton>
+            </>
+
+        );
+        }
+
+        export default TodoCreate;
+        ```
+
+        - UseState 사용
+
+            ```jsx
+              const [open, setOpen] = useState(false); 
+
+                const onToggle = () => setOpen(!open);
+            ```
+
+        - 리턴 렌더
+
+            ```jsx
+            return(
+                <>
+                {open &&(
+                    <InsertFormPositioner>
+                        <InsertForm>
+                        <Input autoFocus placeholder="할 일을 입력 후, Enter 를 누르세요" />
+                        </InsertForm>
+                    </InsertFormPositioner>
+                )}
+                
+                <CircleButton onClick={onToggle} open={open}>
+                    <MdAdd/>
+                  </CircleButton>
+                </>
+
+            );
+            ```
+
+            - 버튼 클릭시 onToggle 상수 발생 open 실행
+
 
 ---

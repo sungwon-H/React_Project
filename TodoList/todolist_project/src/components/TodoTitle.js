@@ -4,7 +4,7 @@ import "./TodoTitle.scss";
 function TodoTitle(){
     return(
         
-            <div className="TodoTitle">Todo List</div>
+            <div className="TodoTitle">TO DO LIST</div>
         
     )
 }
