@@ -36,7 +36,7 @@ const Import = styled.div`
 
 // 아이템 블록
 const TodoItemBlock = styled.div`
-  border:1px solid black;
+  
   display: flex;
   align-items: center;
   padding-top: 12px;
@@ -67,6 +67,7 @@ const CheckCircle = styled.div`
   ${props =>
     props.done &&
     css`
+     
       border: 1px solid #38d9a9;
       color: #38d9a9;
     `}

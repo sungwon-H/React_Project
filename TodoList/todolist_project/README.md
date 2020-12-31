@@ -9,7 +9,9 @@
     1. [Todo Template 생성](#todo-template-생성)
     2. [Todo Head생성](#todo-head-생성)
     3. [Todo List생성](#todo-list-생성)
-3. [TodoList 기능 구현]
+3. [Context API 상태관리](#context-api-상태관리)
+
+4. [TodoList 기능 구현]
 ---
 ### TodoList 구상도
 
@@ -1141,3 +1143,251 @@
         - Text: done 설정으로 클릭 시 변화 줌
 
 ---
+
+<br>
+
+## Context API 상태관리
+
+<br>
+
+### Context API 를 활용한 상태 관리
+
+<br>
+
+- App에서 todos 상태와, onToggle, onRemove, onCreate 함수를 지니고 있게 하고, 해당 값들을 props 를 사용해서 자식 컴포넌트들에게 전달해주는 방식으로 구현 할 수 있죠
+
+---
+
+### 리듀서 만들기
+
+- src 디렉터리에 TodoContext.js 파일을 생성하고, 그 안에 useReducer 를 사용하여 상태를 관리하는 TodoProvider 라는 컴포넌트 생성
+
+---
+
+- TodoContext.js
+
+    ```jsx
+    import React, {useReducer, createContext, useContext, useRef} from 'react';
+
+    const initialTodos = [
+        {
+          id: 1,
+          text: '프로젝트 생성하기',
+          done: true
+        },
+        {
+          id: 2,
+          text: '컴포넌트 스타일링하기',
+          done: true
+        },
+        {
+          id: 3,
+          text: 'Context 만들기',
+          done: false
+        },
+        {
+          id: 4,
+          text: '기능 구현하기',
+          done: false
+        }
+      ];
+
+      function todoReducer(state, action){
+          switch (action.type){// action.type에 따라 다른 작업 수행
+            case 'CREATE':
+                  return state.concat(action.todo);
+            case 'TOGGLE':
+                return state.map(todo => // 반복되는 컴포넌트를 렌더링 map함수는 파라미터로 전달된 함수를 사용해서 배열 내 각 요소를 원하는 규칙에 따라 변환한 후, 그 결과로 새로운 배열을 생성
+                    todo.id === action.id ? {...todo, done: !todo.done}:todo);
+            case 'REMOVE':
+                return state.filter(todo => todo.id !== action.id);
+            default:
+                throw new Error(`Unhandled action type: ${action.type}`);
+          }
+      }
+
+      const TodoStateContext = createContext();
+      const TodoDispatchContext = createContext();
+      const TodoNextIdContext = createContext();
+     
+    export function TodoProvider({children}){
+      
+          const [state, dispatch] = useReducer(todoReducer, initialTodos); // state는 현재를 가리키고 dispatch는 액션을 발생 시킨다 
+          const nextId = useRef(5); // 다음에 만들어지는 nextId는 새로운 항목이 추가될 경우 고유 id가 붙게 된다.
+          return(
+            <TodoStateContext.Provider value={state}>
+                <TodoDispatchContext.Provider value={dispatch}>
+                <TodoNextIdContext.Provider value={nextId}>
+                  {children}  
+                </TodoNextIdContext.Provider>
+                </TodoDispatchContext.Provider>
+            </TodoStateContext.Provider>
+          );
+      }
+
+      //useContext 커스텀 훅 사용
+      export function useTodoState() {
+        const context = useContext(TodoStateContext);
+        if (!context) {
+          throw new Error('Cannot find TodoProvider');
+        }
+        return context;
+      }
+      
+      export function useTodoDispatch() {
+        const context = useContext(TodoDispatchContext);
+        if (!context) {
+        throw new Error('Cannot find TodoProvider');
+        }
+      return context;
+
+      }
+
+      export function useTodoNextId() {
+        const context = useContext(TodoNextIdContext);
+      if (!context) {
+        throw new Error('Cannot find TodoProvider');
+      }
+      return context;
+      }
+    ```
+
+    - 리액트 사용 및 useReducer, createContext, useContext, useRef 모듈 및 Hook 함수 사용
+
+        ```jsx
+        import React, {useReducer, createContext, useContext, useRef} from 'react';
+        ```
+
+    - initialTodos  배열 생성
+
+        ```jsx
+        const initialTodos = [
+            {
+              id: 1,
+              text: '프로젝트 생성하기',
+              done: true
+            },
+            {
+              id: 2,
+              text: '컴포넌트 스타일링하기',
+              done: true
+            },
+            {
+              id: 3,
+              text: 'Context 만들기',
+              done: false
+            },
+            {
+              id: 4,
+              text: '기능 구현하기',
+              done: false
+            }
+          ];
+        ```
+
+    - useReducer 생성
+        - 리듀서는 현재 상태, 그리고 업데이트를 위해 필요한 정보를 담은 액션 값을 전달 받아 새로운 상태를 반환하는 함수
+        - 반드시 불변성을 지켜야함
+        - switch는 action.type에 따라 다른 작업을 수행한다.
+        - map는 반복되는 컴포넌트를 렌더링 map함수는 파라미터로 전달된 함수를 사용해서 배열 내 각 요소를 원하는 규칙에 따라 변환한 후, 그 결과로 새로운 배열을 생성
+
+        ```jsx
+         function todoReducer(state, action){
+              switch (action.type){// action.type에 따라 다른 작업 수행
+                case 'CREATE':
+                      return state.concat(action.todo);
+                case 'TOGGLE':
+                    return state.map(todo => 
+                        todo.id === action.id ? {...todo, done: !todo.done}:todo);
+                case 'REMOVE':
+                    return state.filter(todo => todo.id !== action.id);
+                default:
+                    throw new Error(`Unhandled action type: ${action.type}`);
+              }
+          }
+        export function TodoProvider({children}){
+          
+              const [state, dispatch] = useReducer(todoReducer, initialTodos); // state는 현재를 가리키고 dispatch는 액션을 발생 시킨다 
+              const nextId = useRef(5); // 다음에 만들어지는 nextId는 새로운 항목이 추가될 경우 고유 id가 붙게 된다.
+              return(
+                <TodoStateContext.Provider value={state}>
+                    <TodoDispatchContext.Provider value={dispatch}>
+                    <TodoNextIdContext.Provider value={nextId}>
+                      {children}  
+                    </TodoNextIdContext.Provider>
+                    </TodoDispatchContext.Provider>
+                </TodoStateContext.Provider>
+              );
+          }
+
+        ```
+
+    - 커스텀 훅 사용
+        - nextId 의미하는 것은 새로운 항목이 추가될때 사용 할 고유 id 입니다. (useRef)
+        - 커스텀 훅 에러처리(TodoProvider)로 안 감싸주면 에러 발생
+
+        ```jsx
+         const TodoStateContext = createContext();
+          const TodoDispatchContext = createContext();
+          const TodoNextIdContext = createContext();
+         
+
+          //useContext 커스텀 훅 사용
+          export function useTodoState() {
+            const context = useContext(TodoStateContext);
+            if (!context) {
+              throw new Error('Cannot find TodoProvider');
+            }
+            return context;
+          }
+          
+          export function useTodoDispatch() {
+            const context = useContext(TodoDispatchContext);
+            if (!context) {
+            throw new Error('Cannot find TodoProvider');
+            }
+          return context;
+
+          }
+
+          export function useTodoNextId() {
+            const context = useContext(TodoNextIdContext);
+          if (!context) {
+            throw new Error('Cannot find TodoProvider');
+          }
+          return context;
+          }
+        ```
+
+- **App.js**
+
+    ```jsx
+    import React from 'react';
+    import {createGlobalStyle} from 'styled-components';
+    import TodoTemplate from './components/TodoTemplate';
+    import TodoHead from './components/TodoHead'
+    import TodoList from './components/TodoList';
+    import {TodoProvider} from './TodoContext';
+
+    const GlobalStyle = createGlobalStyle`
+        body {
+          background: #FDF5E6;
+        }
+    `;
+
+    function App(){
+      return(
+        <TodoProvider>
+        <GlobalStyle/>
+        <TodoTemplate>
+          <TodoHead/>
+          <TodoList/>
+        </TodoTemplate>
+        </TodoProvider>
+      );
+    }
+
+    export default App;
+    ```
+
+    - TodoProvider 로 컴포넌트 감싸주기

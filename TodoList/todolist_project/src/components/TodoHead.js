@@ -4,7 +4,7 @@ import TodoDate from './TodoDate';
 import TodoTitle from './TodoTitle';
 import TodoTask from './TodoTask';
 import TodoCreate from './TodoCreate';
-
+import { useTodoState } from '../TodoContext';
 const TodoHeadBlock = styled.div`
     
     height:280px;
@@ -16,6 +16,8 @@ const TodoHeadBlock = styled.div`
 `;
 
 function TodoHead() {
+    const todos = useTodoState();
+    console.log(todos);
     return(
         <TodoHeadBlock>
             <TodoDate/>

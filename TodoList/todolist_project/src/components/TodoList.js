@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import TodoItem from './TodoItem';
 const TodoListBlock= styled.div`
-    border: 1px solid black;
+    
     flex: 1; // 해당 태그가 차지할 수 있는 영역을 꽉 채우도록 설정
     padding: 20px 32px;
     padding-bottom: 48px;

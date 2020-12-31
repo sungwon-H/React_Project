@@ -28,7 +28,7 @@ function TodoTask(){
     return(
         <TodoTaskBlock>
             <div className="tasks-important">
-            <MdStar font-size="25px" color= "#f0f351"/> 0
+            <MdStar color= "#f0f351"/> 0
                 </div>
             <div className="tasks-left">남은 할 일 x 개</div>
         </TodoTaskBlock>
