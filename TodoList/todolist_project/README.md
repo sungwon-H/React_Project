@@ -11,7 +11,7 @@
     3. [Todo List생성](#todo-list-생성)
 3. [Context API 상태관리](#context-api-상태관리)
 
-4. [TodoList 기능 구현]
+4. [TodoList 기능 구현](#기능-구현하기)
 ---
 ### TodoList 구상도
 
@@ -1391,3 +1391,288 @@
     ```
 
     - TodoProvider 로 컴포넌트 감싸주기
+    ---
+
+    <br>
+
+    ### 기능 구현하기
+<br>
+
+- 남은 할 일 개수 숫자 카운트
+- 별 아이콘 클릭시 상단으로 아이템이 상단으로 올라오는 것과 중요표시 갯수가 1올라감
+- 삭제 버튼
+- 생성시 리스트 추가
+
+---
+
+<br>
+
+- 남은 할 일 갯수 및 중요 표시된 갯수  보여주기
+    - **TodoTask.js**
+
+    ```jsx
+    import React from 'react';
+    import styled from 'styled-components';
+    import {MdStar} from 'react-icons/md';
+    import { useTodoState } from '../TodoContext';
+    const TodoTaskBlock = styled.div`
+    display:flex;
+    justify-content: space-between;
+
+    .tasks-important{
+        font-size: 21px;
+        font-weight:bold;
+        color: #323232; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+    }
+
+    .tasks-left{
+        font-size: 21px;
+        font-weight:bold;
+        color: #F49F5B;
+        
+    }
+    `
+
+    function TodoTask(){
+        const todos = useTodoState();
+        const undoneTasks = todos.filter(todo => !todo.done);
+        const undoneImport = todos.filter(todo => todo.imp)
+        return(
+            <TodoTaskBlock>
+                <div className="tasks-important">
+                <MdStar color= "#f0f351"/>{undoneImport.length}
+                    </div>
+                <div className="tasks-left">남은 할 일 {undoneTasks.length} 개</div>
+            </TodoTaskBlock>
+        )
+    }
+    export default TodoTask;
+    ```
+
+    - 상수 todos로 TodoContext연결
+
+---
+<br>
+
+- 날짜 표시
+    - TodoDate.js
+
+        ```jsx
+        import React from 'react';
+        import "./TodoDate.scss";
+
+        function TodoDate(){
+
+            const today = new Date();
+            const dateString = today.toLocaleDateString('ko-KR', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            });
+            return(
+                
+                    <div className="TodoDate">{dateString}</div>
+               
+                
+            )
+        }
+
+        export default TodoDate;
+        ```
+
+---
+<br>
+
+- TodoList 항목 렌더링
+
+    - **TodoList.js**
+
+    ```jsx
+    import React from 'react';
+    import styled from 'styled-components';
+    import { useTodoState } from '../TodoContext';
+    import TodoItem from './TodoItem';
+
+    const TodoListBlock= styled.div`    
+        flex: 1; // 해당 태그가 차지할 수 있는 영역을 꽉 채우도록 설정
+        padding: 20px 32px;
+        padding-bottom: 48px;
+        overflow-y: auto;
+       
+    `;
+
+    function TodoList(){
+        const todos = useTodoState();
+
+        return(
+            <TodoListBlock>
+                {todos.map(todo => (
+                    <TodoItem
+                    key={todo.id}
+                    id={todo.id}
+                    text={todo.text}
+                    done={todo.done}
+                    imp={todo.imp}
+                />
+                ))}
+               
+            </TodoListBlock>
+        );
+    }
+
+    export default TodoList;
+    ```
+
+    - 상수 todos에 contextAPI 연결
+
+---
+<br>
+
+- **리스트 추가 기능**
+
+    - **TodoCreate.js**
+
+    ```jsx
+    import React, {useState} from 'react';
+    import styled, {css} from 'styled-components';
+    import {MdAdd} from 'react-icons/md';
+    import {useTodoDispatch, useTodoNextId}from '../TodoContext';
+
+    const CircleButton = styled.button`
+      
+        background: #F49551;
+        &:hover { 
+        background: #F5AF64;
+        transform: rotate(45deg);
+        }
+        &:active {
+        background: #F49551;
+        }
+
+       z-index:5;
+        width: 40px; // 너비
+        height: 40px; // 높이
+        font-size: 60px; //  +두께
+        color:white;
+        border-radius: 50%; // 둥글게
+        position: relative; // 아이콘 위치 변경
+        top: 20%; // 아이콘 아래로
+        left : 90%; // 아이콘 왼쪽으로 90
+        border: none; // 테두리x
+        outline: none; // 테두리 x
+
+        // 아이콘 + 위치
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.125s all ease-in; // 모양변화속도
+
+        ${props =>
+            props.open &&
+            css`
+              background: #288CFF;
+              &:hover {
+                background: #50C8FF;
+                transform: rotate(45deg);
+              }
+              &:active {
+                background: #288CFF;
+              }
+              
+              border-radius: 10%; // 둥글게
+
+            `}
+    `;
+    const InsertFormPositioner = styled.div` // 입력 폼 1번째 
+        display:flex;
+        width: 383px;
+        top:395px;
+        position: absolute;
+    `;
+
+    const InsertForm = styled.form` // 입력폼 2번째
+       
+        
+        background: #f8f9fa;
+        padding-right:10px;
+        padding-left:10px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        border-radius: 5%;
+
+    `;
+    const Input = styled.input` // 3번째 입력폼
+
+      padding-top:10px;
+      padding-bottom:10px;
+      border-radius: 4px;
+      border: 1px solid #dee2e6;
+      width: 383px;
+      outline: none;
+      font-size: 18px;
+      box-sizing: border-box;
+    `;
+
+    function TodoCreate(){
+        const [open, setOpen] = useState(false); 
+        const [value, setValue] = useState('');
+
+        const dispatch = useTodoDispatch();
+        const nextId = useTodoNextId();
+
+        const onToggle = () => setOpen(!open);
+        const onChange = e => setValue(e.target.value);
+        const onSubmit = e => {
+          e.preventDefault(); // 새로고침 방지
+          dispatch({
+            type: 'CREATE',
+            todo: {
+              id: nextId.current,
+              text: value,
+              done: false
+            }
+          });
+          setValue('');
+          setOpen(false);
+          nextId.current += 1;
+        };
+
+        return (
+        <>
+          {open && (
+            <InsertFormPositioner>
+              <InsertForm onSubmit={onSubmit}>
+                <Input
+                  autoFocus
+                  placeholder="할 일을 입력 후, Enter 를 누르세요"
+                  onChange={onChange}
+                  value={value}
+                />
+              </InsertForm>
+            </InsertFormPositioner>
+          )}
+          <CircleButton onClick={onToggle} open={open}>
+            <MdAdd />
+          </CircleButton>
+        </>
+      );
+    }
+
+    export default React.memo(TodoCreate);
+    ```
+
+    - disfatch와 nextId 연결
+
+        ```jsx
+        import {useTodoDispatch, useTodoNextId}from '../TodoContext';
+        ```
+
+    - 마지막 줄 React.memo 감싸서 TodoContext에서 관리하고 state가 바뀔때 TodoCreate 불필요한 렌더링 방지
+
+        ```jsx
+        export default React.memo(TodoCreate);
+        ```

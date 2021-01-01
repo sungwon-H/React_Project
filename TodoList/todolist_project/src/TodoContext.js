@@ -4,22 +4,26 @@ const initialTodos = [
     {
       id: 1,
       text: '프로젝트 생성하기',
-      done: true
+      done: true,
+      imp:false 
     },
     {
       id: 2,
       text: '컴포넌트 스타일링하기',
-      done: true
+      done: true,
+      imp:false 
     },
     {
       id: 3,
       text: 'Context 만들기',
-      done: false
+      done: true,
+      imp:false 
     },
     {
       id: 4,
       text: '기능 구현하기',
-      done: false
+      done: false,
+      imp:true 
     }
   ];
 
@@ -30,6 +34,9 @@ const initialTodos = [
         case 'TOGGLE':
             return state.map(todo => // 반복되는 컴포넌트를 렌더링 map함수는 파라미터로 전달된 함수를 사용해서 배열 내 각 요소를 원하는 규칙에 따라 변환한 후, 그 결과로 새로운 배열을 생성
                 todo.id === action.id ? {...todo, done: !todo.done}:todo);
+        case 'IMPORT':
+            return state.map(todo =>
+              todo.id === action.id ? {...todo, imp:  !todo.imp}:todo);
         case 'REMOVE':
             return state.filter(todo => todo.id !== action.id);
         default:

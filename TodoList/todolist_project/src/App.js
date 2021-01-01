@@ -8,7 +8,7 @@ import {TodoProvider} from './TodoContext';
 
 const GlobalStyle = createGlobalStyle`
     body {
-      background: #FDF5E6;
+      background: #f1f3f5;
     }
 `;
 

@@ -12,7 +12,7 @@ const TodoTemplateBlock = styled.div`
     display: flex;
     flex-direction: column;
     border-radius: 16px;
-    box-shadow: 5px 5px 5px 5px  #787878;
+    box-shadow: 4px 6px 3px 2px  #787878;
 
 `;
 
