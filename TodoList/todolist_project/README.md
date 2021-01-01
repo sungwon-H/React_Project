@@ -1171,26 +1171,30 @@
 
     const initialTodos = [
         {
-          id: 1,
-          text: '프로젝트 생성하기',
-          done: true
-        },
-        {
-          id: 2,
-          text: '컴포넌트 스타일링하기',
-          done: true
-        },
-        {
-          id: 3,
-          text: 'Context 만들기',
-          done: false
-        },
-        {
-          id: 4,
-          text: '기능 구현하기',
-          done: false
-        }
-      ];
+        id: 1,
+        text: '알고리즘 문제해결',
+        done: false,
+        imp:false 
+      },
+      {
+        id: 2,
+        text: '리액트 복습',
+        done: true,
+        imp:false 
+      },
+      {
+        id: 3,
+        text: '잠자기',
+        done: true,
+        imp:false 
+      },
+      {
+        id: 4,
+        text: '프로젝트 구상',
+        done: false,
+        imp:true 
+      }
+        ];
 
       function todoReducer(state, action){
           switch (action.type){// action.type에 따라 다른 작업 수행
